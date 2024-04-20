@@ -28,8 +28,11 @@ async def start(message: types.Message):
 
 @dp.message()
 async def echo(message: types.Message):
-    if url_extractor.find_urls(message.text):
-        await message.answer("Url is finded.")
+    if message.chat.type == "supergroup":
+        if url_extractor.find_urls(message.text):
+            await message.delete()
+            await message.answer(
+                f"{message.from_user.first_name} ({message.from_user.id}) have X warns. Reason: Y")
 
 
 async def main():
