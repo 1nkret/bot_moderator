@@ -15,6 +15,7 @@ async def url_is_find(message) -> None:
 
     await message.delete()
     db.add_note(
+        chat_id=message.chat.id,
         username=message.from_user.username,
         first_name=message.from_user.first_name,
         from_user_id=message.from_user.id,
@@ -22,7 +23,7 @@ async def url_is_find(message) -> None:
         reason=reason,
     )
 
-    warns = db.response_to_check_warns(message.from_user.id)
+    warns = db.response_to_check_warns(message.chat.id, message.from_user.id)
     answer_message = f"{message.from_user.first_name} ({message.from_user.id}) have {warns} warns. Reason: {reason}"
 
     if warns >= 3:

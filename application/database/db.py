@@ -33,6 +33,7 @@ class Database:
         with self.connection as con:
             con.execute("""CREATE TABLE IF NOT EXISTS warnings
             (id INTEGER PRIMARY KEY AUTOINCREMENT ,
+            chat_id INTEGER,
             username TEXT,
             first_name TEXT,
             from_user_id INTEGER,
@@ -43,6 +44,7 @@ class Database:
 
     def add_note(
         self,
+        chat_id: int,
         username: str,
         first_name: str,
         from_user_id: int,
@@ -52,21 +54,39 @@ class Database:
         with self.connection as con:
             con.execute(
                 """
-            INSERT INTO warnings (username, first_name, from_user_id, reason, message, date)
+            INSERT INTO warnings (chat_id, username, first_name, from_user_id, reason, message, date)
 
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
-                (username, first_name, from_user_id, reason, message, datetime.now()),
+                (
+                    chat_id,
+                    username,
+                    first_name,
+                    from_user_id,
+                    reason,
+                    message,
+                    datetime.now(),
+                ),
             )
 
-    def response_to_check_warns(self, from_user_id: int) -> int:
+    def response_to_check_warns(self, chat_id: int, from_user_id: int) -> int:
         with self.connection as con:
             return con.execute(
                 """
             SELECT COUNT(*)
             FROM warnings
-            WHERE from_user_id=? AND date>?""",
-                (from_user_id, datetime.now() - timedelta(days=3)),
+            WHERE from_user_id=? AND chat_id=? AND date>?""",
+                (from_user_id, chat_id, datetime.now() - timedelta(days=3)),
+            ).fetchone()[0]
+
+    def all_warns(self, chat_id: int):
+        with self.connection as con:
+            return con.execute(
+                """
+            SELECT COUNT(*)
+            FROM warnings
+            WHERE chat_id=?""",
+                (chat_id,),
             ).fetchone()[0]
 
 
