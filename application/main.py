@@ -38,10 +38,10 @@ async def check_message(message: types.Message):
     :param message: message info from telegram chat
     :return: None
     """
-    # if message.chat.type != "private" and message.from_user.id not in [
-    #     el.user.id for el in await bot.get_chat_administrators(message.chat.id)
-    # ]:
-    if message.chat.type != "private":
+    # if message.chat.type != "private":
+    if message.chat.type != "private" and message.from_user.id not in [
+        el.user.id for el in await bot.get_chat_administrators(message.chat.id)
+    ]:
         # Check for URL in message
         if url_extractor.find_urls(message.text):
             await url_is_find(message)
