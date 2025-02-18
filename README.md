@@ -34,3 +34,10 @@ python main.py
 
 Before running, make sure to configure the necessary parameters in the configuration file. Detailed setup instructions can be found in the [documentation](https://github.com/1nkret/bot_moderator).
 
+## Technologies
+- Python
+- aiogram
+- asyncio
+- sqlite3
+- requests
+- dotenv
